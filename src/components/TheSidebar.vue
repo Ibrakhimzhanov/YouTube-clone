@@ -47,10 +47,11 @@
         More from YouTube
       </div>
       <ul>
-        <SideBarNavItem :label="listItems[9].label" :icon="listItems[9].icon" />
         <SideBarNavItem
-          :label="listItems[10].label"
-          :icon="listItems[10].icon"
+          v-for="listItem in listItems.slice(9, 11)"
+          :key="listItem.label"
+          :label="listItem.label"
+          :icon="listItem.icon"
         />
       </ul>
     </section>
