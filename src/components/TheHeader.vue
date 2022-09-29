@@ -33,11 +33,11 @@
           stroke="currentColor"
           viewBox="0 0 24 24"
         />
-        <TheDropdownApps />
+        <!-- <TheDropdownApps /> -->
       </button>
       <button class="relative group p-2 focus:outline-none">
         <BaseIcon name="dotsVertical" class="w-5 h-5" />
-        <TheDropdownSettings />
+        <!-- <TheDropdownSettings /> -->
       </button>
       <ButtonLogin />
     </div>
