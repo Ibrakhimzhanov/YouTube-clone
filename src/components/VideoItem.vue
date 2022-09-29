@@ -16,3 +16,4 @@ export default {
   props: ["index"],
 };
 </script>
+ 

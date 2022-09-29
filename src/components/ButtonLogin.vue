@@ -1,7 +1,7 @@
 <template>
   <button :class="buttonClassses">
     <BaseIcon
-      name="user"
+      name="userCircle"
       class="mr-2 w-7 h-7"
       fill="none"
       stroke="currentColor"
