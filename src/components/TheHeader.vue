@@ -2,7 +2,7 @@
   <header class="flex fixed w-full z-30 justify-between">
     <div class="lg:w-1/4 flex">
       <div class="flex items-center xl:w-64 xl:bg-white pl-4">
-        <button class="mr-3 sm:ml-2 sm:mr-6">
+        <button @click="$emit('toggleSidebar')" class="mr-3 sm:ml-2 sm:mr-6">
           <BaseIcon name="menu" />
         </button>
         <LogoMain />
@@ -59,6 +59,9 @@ export default {
     TheSearch,
     ButtonLogin,
     BaseIcon,
+  },
+  emits: {
+    toggleSidebar: null,
   },
 };
 </script>

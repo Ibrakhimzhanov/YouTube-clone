@@ -1,7 +1,5 @@
 <template>
-  <aside
-    class="min-h-screen xl:hidden hidden md:block bg-white overflow-auto fixed top-0 pt-14 z-20"
-  >
+  <aside :class="classes">
     <section>
       <ul>
         <li>
@@ -122,3 +120,20 @@
     </section>
   </aside>
 </template>
+<script>
+export default {
+  computed: {
+    classes() {
+      return [
+        "min-h-screen",
+        "overflow-auto",
+        "fixed",
+        "top-0",
+        "pt-14",
+        "bg-white",
+        "z-20",
+      ];
+    },
+  },
+};
+</script>
