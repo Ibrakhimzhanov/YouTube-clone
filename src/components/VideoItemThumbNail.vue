@@ -1,11 +1,7 @@
 <template>
   <div class="relative">
     <img :src="`https://picsum.photos/seed/image${index}/720/404`" />
-    <span
-      class="opacity-100 group-hover:opacity-100 bg-opacity-60 absolute top-0 right-0 text-white bg-black rounded-sm m-1 p-1"
-    >
-      <BaseIcon name="clock" class="w-5 h-5" />
-    </span>
+    <VideoItemThumbnailButton icon="clock" label="Watch later" />
     <span
       class="opacity-100 group-hover:opacity-100 bg-opacity-60 absolute top-8 right-0 text-white bg-black rounded-sm m-1 p-1"
     >
@@ -21,8 +17,9 @@
 
 <script>
 import BaseIcon from "./BaseIcon.vue";
+import VideoItemThumbnailButton from "./VideoItemThumbnailButton.vue";
 export default {
   props: ["index"],
-  components: { BaseIcon },
+  components: { BaseIcon, VideoItemThumbnailButton },
 };
 </script>

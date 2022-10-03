@@ -63,19 +63,19 @@
   </SidebarSection>
 </template>
 <script>
-import SidebarNavItem from "./SidebarNavItem.vue";
 import ButtonLogin from "./ButtonLogin.vue";
-import SidebarNavItemRounded from "./SidebarNavItemRounded.vue";
-import SidebarSectionHeading from "./SidebarSectionHeading.vue";
 import SidebarSection from "./SidebarSection.vue";
+import SidebarNavItemRounded from "./SidebarNavItemRounded.vue";
+import SidebarNavItem from "./SidebarNavItem.vue";
+import SidebarSectionHeading from "./SidebarSectionHeading.vue";
 import TheFooter from "./TheFooter.vue";
 export default {
   components: {
+    SidebarSection,
     SidebarNavItem,
     ButtonLogin,
     SidebarNavItemRounded,
     SidebarSectionHeading,
-    SidebarSection,
     TheFooter,
   },
   data() {
