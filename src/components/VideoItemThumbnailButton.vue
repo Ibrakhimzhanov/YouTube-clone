@@ -1,5 +1,5 @@
 <template>
-  <span :class="classes">
+  <span :class="classes" @mouseenter="toggleBadge" @mouseleave="toggleBadge">
     <BaseIcon :name="icon" class="w-5 h-5" />
     <span :class="badgeClasses">
       <span class="inline-block my-1.5 mx-3">
@@ -25,19 +25,14 @@ export default {
         "group-hover:opacity-100",
         "bg-opacity-60",
         "absolute",
-        "top-0",
         "right-0",
         "text-white",
         "bg-black",
         "m-1",
         "p-1",
-        "rounded-sm",
+        "outline-none",
+        this.isBadgeShown ? "rounded-r-sm" : "rounded-sm",
       ];
-    },
-    data() {
-      return {
-        isBadgeShown: false,
-      };
     },
     badgeClasses() {
       return [
@@ -54,13 +49,18 @@ export default {
         "delay-100",
         "font-semibold",
         "rounded-l-sm",
-        "w-28",
+        this.isBadgeShown ? "w-28" : "w-0",
       ];
     },
-    methods: {
-      toggleBadge() {
-        this.isBadgeShown = !this.isBadgeShown;
-      },
+  },
+  data() {
+    return {
+      isBadgeShown: false,
+    };
+  },
+  methods: {
+    toggleBadge() {
+      this.isBadgeShown = !this.isBadgeShown;
     },
   },
 };
