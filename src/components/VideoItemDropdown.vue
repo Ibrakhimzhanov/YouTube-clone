@@ -1,6 +1,6 @@
 <template>
   <div class="relative -m-1 ml-auto">
-    <button @click="isOpen = !isOpen" class="relative p-2 focus:outline-none">
+    <button @click="toggle" :class="buttonClasses">
       <BaseIcon name="dotsVertical" class="w-5 h-5" />
     </button>
     <transition
@@ -16,7 +16,7 @@
         ref="dropdown"
         @keydown.esc="isOpen = false"
         tabindex="-1"
-        class="absolute top-9 right-full sm:right-0 bg-white w-48 rounded shadow-2xl focus:outline-none"
+        :class="dropdownClasses"
       >
         <section class="py-2">
           <ul>
@@ -32,11 +32,37 @@ import BaseIcon from "./BaseIcon.vue";
 import VideoItemDropdownListItem from "./VideoItemDropdownListItem.vue";
 export default {
   components: { BaseIcon, VideoItemDropdownListItem },
+  computed: {
+    buttonClasses() {
+      return [
+        "p-1",
+        "text-gray-500",
+        "hover:text-gray-700",
+        "focus:outline-none",
+        "group-hover:opacity-100",
+        this.isOpen ? "opacity-100" : "opacity-0",
+      ];
+    },
+
+    dropdownClasses() {
+      return [
+        "z-30",
+        "absolute",
+        "bg-white",
+        "w-48",
+        "rounded",
+        "shadow-2xl",
+        "focus:outline-none",
+        ...this.positionClasses,
+      ];
+    },
+  },
   data() {
-    return { isOpen: false };
+    return { isOpen: false, positionClasses: [] };
   },
   watch: {
     isOpen() {
+      document.body.classList.toggle("overflow-hidden");
       this.$nextTick(() => this.isOpen && this.$refs.dropdown.focus());
     },
   },
@@ -46,6 +72,88 @@ export default {
         this.isOpen = false;
       }
     });
+  },
+  methods: {
+    toggle(event) {
+      this.isOpen = !this.isOpen;
+
+      if (this.isOpen) {
+        this.$nextTick(() => {
+          this.positionClasses = this.getPositionClasses(event);
+        });
+      }
+    },
+
+    getPositionClasses(event) {
+      return [
+        this.getTopClass(event),
+        this.getBootomClass(event),
+        this.getRightClass(event),
+        this.getLeftClass(event),
+      ];
+    },
+    getTopClass(event) {
+      const clickCoordY = event.clientY;
+      const buttonHeight = event.currentTarget.offsetHeight;
+      const dropdownHeight = this.$refs.dropdown.offsetHeight;
+
+      if (window.innerHeight - clickCoordY < dropdownHeight) {
+        return "top-auto";
+      }
+      if (window.innerHeight - clickCoordY < dropdownHeight + buttonHeight) {
+        return "top-0";
+      }
+      return "top-8";
+    },
+
+    getBootomClass(event) {
+      const clickCoordY = event.clientY;
+      const dropdownHeight = this.$refs.dropdown.offsetHeight;
+
+      if (window.innerHeight - clickCoordY < dropdownHeight) {
+        return "bottom-8";
+      }
+      return "buttom-auto";
+    },
+
+    getRightClass(event) {
+      const clickCoordX = event.clientX;
+      const clickCoordY = event.clientY;
+      const buttonHeight = event.currentTarget.offsetHeight;
+      const dropdownWidth = this.$refs.dropdown.offsetWidth;
+      const dropdownHeight = this.$refs.dropdown.offsetHeight;
+
+      if (window.innerWidth - clickCoordX > dropdownWidth) {
+        return "right-auto";
+      }
+      if (window.innerHeight - clickCoordY > dropdownHeight + buttonHeight) {
+        return "right-0";
+      }
+      if (window.innerHeight - clickCoordY > dropdownHeight) {
+        return "right-8";
+      }
+
+      return "right-0";
+    },
+
+    getLeftClass(event) {
+      const clickCoordX = event.clientX;
+      const clickCoordY = event.clientY;
+      const buttonHeight = event.currentTarget.offsetHeight;
+      const dropdownWidth = this.$refs.dropdown.offsetWidth;
+      const dropdownHeight = this.$refs.dropdown.offsetHeight;
+
+      if (window.innerWidth - clickCoordX < dropdownWidth) {
+        return "left-auto";
+      }
+      if (window.innerHeight - clickCoordY < dropdownHeight) {
+        return "left-auto";
+      }
+      if (window.innerHeight - clickCoordY > dropdownHeight + buttonHeight) {
+        return "left-auto";
+      }
+      return "left-8";
+    },
   },
 };
 </script>
