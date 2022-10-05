@@ -5,12 +5,17 @@
       class="mr-3 rounded-full w-9 h-9"
     />
     <div class="text-sm">
-      <span class="mb-1 font-semibold text-gray-800"
-        >Shut Down VIDEO {{ index }}</span
-      >
-      <div class="mt-1 flex items-center">
-        <span>BLACKPINK {{ index * 2 }}</span>
-        <BaseIcon name="checkCircle" class="w-3.5 h-3.5 ml-1" />
+      <!-- <BaseTooltip :text="channelName" top> -->
+      <span class="mb-1 font-semibold text-gray-800">Channel {{ index }}</span>
+      <!-- </BaseTooltip> -->
+
+      <div class="mt-1 flex">
+        <BaseTooltip :text="channelName" top>
+          <span>{{ channelName }}</span>
+        </BaseTooltip>
+        <BaseTooltip text="Verified" top>
+          <BaseIcon name="checkCircle" class="w-3.5 h-3.5 ml-1" />
+        </BaseTooltip>
       </div>
       <div>
         <span>11M views</span>
@@ -24,8 +29,14 @@
 <script>
 import BaseIcon from "./BaseIcon.vue";
 import VideoItemDropdown from "./VideoItemDropdown.vue";
+import BaseTooltip from "./BaseTooltip.vue";
 export default {
+  data() {
+    return {
+      channelName: `BLACKPINK ${this.index * 2}`,
+    };
+  },
   props: ["index"],
-  components: { BaseIcon, VideoItemDropdown },
+  components: { BaseIcon, VideoItemDropdown, BaseTooltip },
 };
 </script>

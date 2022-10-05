@@ -1,13 +1,18 @@
 <template>
   <div class="relative">
-    <div class="h-full" @mouseenter="toggle" @mouseleave="toggle">
+    <div
+      class="flex items-center h-full"
+      @mouseenter="isShown = true"
+      @mouseleave="isShown = false"
+      @click="isShown = false"
+    >
       <slot />
     </div>
     <transition
-      enter-active-class="transition ease-out duration-100"
+      enter-active-class="transition ease-out duration-200"
       enter-from-class="transition opacity-0 "
       enter-to-class="transition opacity-100 "
-      leave-active-class="transition ease-in duration-100"
+      leave-active-class="transition ease-in duration-75"
       leave-from-class="transition opacity-100"
       leave-to-class="transition opacity-0"
     >
@@ -20,15 +25,14 @@
 export default {
   props: {
     text: String,
+    top: Boolean,
+    right: Boolean,
+    left: Boolean,
   },
   data() {
     return {
       isShown: false,
-    };
-  },
-  computed: {
-    classes() {
-      return [
+      classes: [
         "bg-gray-600",
         "bg-opacity-80",
         "rounded-sm",
@@ -36,17 +40,24 @@ export default {
         "text-xs",
         "whitespace-nowrap",
         "p-2",
-        "absolute",
-        "top-14",
-        "left-1/2",
         "transform",
-        "-translate-x-1/2",
-      ];
-    },
+        "absolute",
+        ...this.getPositionClasses(),
+      ],
+    };
   },
   methods: {
-    toggle() {
-      this.isShown = !this.isShown;
+    getPositionClasses() {
+      const topClass = this.top ? "bottom-12" : "top-14";
+
+      if (this.right) {
+        return [topClass, "left-0"];
+      }
+      if (this.left) {
+        return [topClass, "right-0"];
+      }
+
+      return [topClass, "left-1/2", "-translate-x-1/2"];
     },
   },
 };

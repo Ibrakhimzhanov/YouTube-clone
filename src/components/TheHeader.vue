@@ -8,26 +8,39 @@
         <LogoMain />
       </div>
     </div>
+    <TheSearchMobile v-if="isMobileSearchShown" @close="closeMobileSearch" />
     <div
+      v-else
       class="hidden sm:flex items-center justify-end flex-1 p-2.5 pl-8 md:pl-12 md:px-8 lg:px-0 lg:w-1/2 max-w-screen-md"
     >
       <TheSearch />
-      <button class="ml-4 focus:outline-none">
-        <BaseIcon name="microphone" class="w-5 h-5" />
-      </button>
+      <BaseTooltip text="Search with your voice">
+        <button class="p-2 focus:outline-none">
+          <BaseIcon name="microphone" class="w-5 h-5" />
+        </button>
+      </BaseTooltip>
     </div>
     <div
       class="flex items-center justify-end lg:w-1/4 sm:space-x-3 p-2 sm:px-4"
     >
-      <button class="sm:hidden p-2 focus:outline-none">
-        <BaseIcon name="microphone" class="w-5 h-5" />
-      </button>
-      <button class="sm:hidden p-2 focus:outline-none">
-        <BaseIcon name="search" class="w-5 h-5" />
-      </button>
+      <BaseTooltip text="Search with your voice">
+        <button class="sm:hidden p-2 focus:outline-none">
+          <BaseIcon name="microphone" class="w-5 h-5" />
+        </button>
+      </BaseTooltip>
+      <BaseTooltip text="Search">
+        <button
+          @click.stop="isMobileSearchActive = true"
+          class="sm:hidden p-2 focus:outline-none"
+        >
+          <BaseIcon name="search" class="w-5 h-5" />
+        </button>
+      </BaseTooltip>
+
       <TheDropdownApps />
 
       <TheDropdownSettings />
+
       <ButtonLogin />
     </div>
   </header>
@@ -40,6 +53,8 @@ import LogoMain from "./LogoMain.vue";
 import TheSearch from "./TheSearch.vue";
 import ButtonLogin from "./ButtonLogin.vue";
 import BaseIcon from "./BaseIcon.vue";
+import BaseTooltip from "./BaseTooltip.vue";
+import TheSearchMobile from "./TheSearchMobile.vue";
 export default {
   components: {
     TheDropdownApps,
@@ -48,9 +63,39 @@ export default {
     TheSearch,
     ButtonLogin,
     BaseIcon,
+    BaseTooltip,
+    TheSearchMobile,
   },
   emits: {
     toggleSidebar: null,
+  },
+  data() {
+    return {
+      isSmallScreen: false,
+      isMobileSearchActive: false,
+    };
+  },
+  computed: {
+    isMobileSearchShown() {
+      return this.isSmallScreen && this.isMobileSearchActive;
+    },
+  },
+  mounted() {
+    this.onResize();
+    window.addEventListener("resize", this.onResize);
+  },
+  methods: {
+    onResize() {
+      if (window.innerWidth < 640) {
+        this.isSmallScreen = true;
+        return;
+      }
+      this.closeMobileSearch();
+      this.isSmallScreen = false;
+    },
+    closeMobileSearch() {
+      this.isMobileSearchActive = false;
+    },
   },
 };
 </script>
