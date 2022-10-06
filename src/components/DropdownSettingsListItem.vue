@@ -2,13 +2,15 @@
   <li>
     <a href="#" class="flex items-center px-4 py-2 text-sm hover:bg-gray-100">
       <BaseIcon
-        v-if="icon"
-        :name="icon"
+        v-if="isIconShown"
+        :name="iconName"
         viewBox="0 0 24 24"
         class="w-6 h-6 mr-3"
       />
 
-      <span>{{ label }}</span>
+      <span :class="['truncate', 'flex-1', { 'ml-9': !isIconShown }]">{{
+        label
+      }}</span>
 
       <BaseIcon
         v-if="withSubMenu"
@@ -25,9 +27,21 @@ export default {
     BaseIcon,
   },
   props: {
+    active: Boolean,
     label: String,
-    icon: String,
     withSubMenu: Boolean,
+    icon: {
+      type: String,
+      default: "check",
+    },
+  },
+  computed: {
+    isIconShown() {
+      return this.active || this.icon !== "check";
+    },
+    iconName() {
+      return this.active ? "check" : this.icon;
+    },
   },
 };
 </script>

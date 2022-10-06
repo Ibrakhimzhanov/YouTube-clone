@@ -1,7 +1,7 @@
 <template>
   <div class="relative">
     <BaseTooltip text="Settings">
-      <button @click="isOpen = !isOpen" class="relative p-2 focus:outline-none">
+      <button @click="toggle" class="relative p-2 focus:outline-none">
         <BaseIcon name="dotsVertical" class="w-5 h-5" />
       </button>
     </BaseTooltip>
@@ -16,68 +16,57 @@
       <div
         v-show="isOpen"
         ref="dropdown"
-        @keydown.esc="isOpen = false"
+        @keydown.esc="close"
         tabindex="-1"
         :class="dropdownClasses"
       >
-        <section class="py-2 border-b">
-          <ul>
-            <DropdownSettingsListItem
-              label="Your data in YouTube"
-              icon="data"
-            />
-          </ul>
-        </section>
-        <section class="py-2 border-b">
-          <ul>
-            <DropdownSettingsListItem
-              v-for="listItem in listItems.slice(1, 6)"
-              :key="listItem.label"
-              :label="listItem.label"
-              :icon="listItem.icon"
-              :with-sub-menu="listItem.withSubMenu"
-            />
-          </ul>
-        </section>
-        <section class="py-2 border-b">
-          <ul>
-            <DropdownSettingsListItem
-              :label="listItems[6].label"
-              :icon="listItems[6].icon"
-            />
-          </ul>
-        </section>
-        <section class="py-2 border-b">
-          <ul>
-            <DropdownSettingsListItem
-              v-for="listItem in listItems.slice(7, 9)"
-              :key="listItem.label"
-              :label="listItem.label"
-              :icon="listItem.icon"
-            />
-          </ul>
-        </section>
-        <section class="py-2">
-          <ul>
-            <DropdownSettingsListItem
-              :label="listItems[9].label"
-              :withSubMenu="listItems[9].withSubMenu"
-            />
-          </ul>
-        </section>
+        <TheDropdownSettingsMain
+          v-if="selectedMenu === 'main'"
+          @select-menu="showSelectedMenu"
+        />
+        <TheDropdownSettingsAppearance
+          v-if="selectedMenu === 'appearance'"
+          @select-menu="showSelectedMenu"
+        />
+        <TheDropdownSettingsLanguages
+          v-if="selectedMenu === 'language'"
+          @select-menu="showSelectedMenu"
+        />
+        <TheDropdownSettingsRestrictedMode
+          v-if="selectedMenu === 'restricted_mode'"
+          @select-menu="showSelectedMenu"
+        />
+        <TheDropdownSettingsLocation
+          v-if="selectedMenu === 'location'"
+          @select-menu="showSelectedMenu"
+        />
       </div>
     </transition>
   </div>
 </template>
 <script>
 import BaseIcon from "./BaseIcon.vue";
-import DropdownSettingsListItem from "./DropdownSettingsListItem.vue";
 import BaseTooltip from "./BaseTooltip.vue";
+import TheDropdownSettingsMain from "./TheDropdownSettingsMain.vue";
+import TheDropdownSettingsAppearance from "./TheDropdownSettingsAppearance.vue";
+import TheDropdownSettingsLanguages from "./TheDropdownSettingsLanguages.vue";
+import TheDropdownSettingsLocation from "./TheDropdownSettingsLocation.vue";
+import TheDropdownSettingsRestrictedMode from "./TheDropdownSettingsRestrictedMode.vue";
 export default {
-  components: { BaseIcon, DropdownSettingsListItem, BaseTooltip },
-  computed: {
-    dropdownClasses() {
-      return [
+  components: {
+    BaseIcon,
+    BaseTooltip,
+    TheDropdownSettingsMain,
+    TheDropdownSettingsAppearance,
+    TheDropdownSettingsLanguages,
+    TheDropdownSettingsLocation,
+    TheDropdownSettingsRestrictedMode,
+  },
+  data() {
+    return {
+      isOpen: false,
+      selectedMenu: "main",
+      dropdownClasses: [
         "z-10",
         "absolute",
         "top-9",
@@ -87,28 +76,7 @@ export default {
         "border",
         "border-t-0",
         "focus:outline-none",
-      ];
-    },
-  },
-  data() {
-    return {
-      listItems: [
-        { label: "Your data in YouTube", icon: "data", withSubMenu: false },
-        { label: "Appearance: Device theme", icon: "sun", withSubMenu: true },
-        { label: "Language: English", icon: "translate", withSubMenu: true },
-        {
-          label: "Restricted Mode: Off",
-          icon: "shieldCheck",
-          withSubMenu: true,
-        },
-        { label: "Location: Ukraine", icon: "location", withSubMenu: true },
-        { label: "Keyboard shortcuts", icon: "keyboard", withSubMenu: false },
-        { label: "Settings", icon: "setting", withSubMenu: false },
-        { label: "Help", icon: "help", withSubMenu: false },
-        { label: "Send feedback", icon: "chatAlt", withSubMenu: false },
-        { label: "Restricted Mode: Off", icon: null, withSubMenu: true },
       ],
-      isOpen: false,
     };
   },
   watch: {
@@ -119,9 +87,27 @@ export default {
   mounted() {
     window.addEventListener("click", (event) => {
       if (!this.$el.contains(event.target)) {
-        this.isOpen = false;
+        this.close();
       }
     });
+  },
+  methods: {
+    showSelectedMenu(selectedMenu) {
+      this.selectedMenu = selectedMenu;
+      this.$refs.dropdown.focus();
+    },
+    toggle() {
+      this.isOpen ? this.close() : this.open();
+    },
+
+    open() {
+      this.isOpen = true;
+    },
+    close() {
+      this.isOpen = false;
+
+      setTimeout(() => (this.selectedMenu = "main"), 100);
+    },
   },
 };
 </script>
