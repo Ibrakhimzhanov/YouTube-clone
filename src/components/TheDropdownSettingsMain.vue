@@ -75,15 +75,17 @@ export default {
       ],
     };
   },
+  props: ["selectedOptions"],
+  emits: {
+    "select-menu": null,
+    "select-option": null,
+  },
   methods: {
     selectMenu(listItem) {
       if (listItem.withSubMenu) {
         this.$emit("select-menu", listItem.id);
       }
     },
-  },
-  emits: {
-    "select-menu": null,
   },
 };
 </script>
