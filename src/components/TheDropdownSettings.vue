@@ -20,26 +20,7 @@
         tabindex="-1"
         :class="dropdownClasses"
       >
-        <TheDropdownSettingsMain
-          v-if="selectedMenu === 'main'"
-          @select-menu="showSelectedMenu"
-        />
-        <TheDropdownSettingsAppearance
-          v-if="selectedMenu === 'appearance'"
-          @select-menu="showSelectedMenu"
-        />
-        <TheDropdownSettingsLanguages
-          v-if="selectedMenu === 'language'"
-          @select-menu="showSelectedMenu"
-        />
-        <TheDropdownSettingsRestrictedMode
-          v-if="selectedMenu === 'restricted_mode'"
-          @select-menu="showSelectedMenu"
-        />
-        <TheDropdownSettingsLocation
-          v-if="selectedMenu === 'location'"
-          @select-menu="showSelectedMenu"
-        />
+        <component :is="menu" @select-menu="showSelectedMenu" />
       </div>
     </transition>
   </div>
@@ -59,8 +40,20 @@ export default {
     TheDropdownSettingsMain,
     TheDropdownSettingsAppearance,
     TheDropdownSettingsLanguages,
-    TheDropdownSettingsLocation,
     TheDropdownSettingsRestrictedMode,
+    TheDropdownSettingsLocation,
+  },
+  computed: {
+    menu() {
+      const menuComponentNames = {
+        main: "TheDropdownSettingsMain",
+        appearance: "TheDropdownSettingsAppearance",
+        language: "TheDropdownSettingsLanguages",
+        restricted_mode: "TheDropdownSettingsRestrictedMode",
+        location: "TheDropdownSettingsLocation",
+      };
+      return menuComponentNames[this.selectedMenu];
+    },
   },
   data() {
     return {

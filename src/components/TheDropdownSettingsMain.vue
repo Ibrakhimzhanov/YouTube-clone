@@ -12,7 +12,7 @@
         :label="listItem.label"
         :icon="listItem.icon"
         :with-sub-menu="listItem.withSubMenu"
-        @click.stop="$emit('select-menu', listItem.id)"
+        @click.stop="selectMenu(listItem)"
       />
     </ul>
   </section>
@@ -74,6 +74,13 @@ export default {
         { label: "Send feedback", icon: "chatAlt", withSubMenu: false },
       ],
     };
+  },
+  methods: {
+    selectMenu(listItem) {
+      if (listItem.withSubMenu) {
+        this.$emit("select-menu", listItem.id);
+      }
+    },
   },
   emits: {
     "select-menu": null,
