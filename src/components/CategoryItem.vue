@@ -7,8 +7,7 @@ export default {
   props: ["category", "isActive"],
   computed: {
     classes() {
-      //TODO
-      //FIXME
+
       const classes = ["px-3", "py-1", "transition", "rounded-full", "border"];
       return this.isActive
         ? [
