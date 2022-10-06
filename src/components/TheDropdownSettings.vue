@@ -65,10 +65,22 @@ export default {
       isOpen: false,
       selectedMenu: "main",
       selectedOptions: {
-        themeId: 0,
-        languageId: 0,
-        restrictedMode: false,
-        locationId: 0,
+        theme: {
+          id: 0,
+          text: "Device theme",
+        },
+        language: {
+          id: 0,
+          text: "English",
+        },
+        restrictedMode: {
+          enabled: false,
+          text: "Off",
+        },
+        location: {
+          id: 0,
+          text: "United States",
+        },
       },
       dropdownClasses: [
         "z-10",
