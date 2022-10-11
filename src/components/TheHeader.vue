@@ -15,19 +15,13 @@
       </div>
     </div>
 
-    <TheSearchMobile v-if="isMobileSearchShown" @close="closeMobileSearch">
-      <TheSearch
-        :search-query="searchQuery"
-        @update-search-query="searchQuery = $event"
-      />
-    </TheSearchMobile>
+    <TheSearchWrapper
+      v-show="isSearchShown"
+      :is-small-screen="isSmallScreen"
+      :is-mobile-search-active="isMobileSearchActive"
+      @close="closeMobileSearch"
+    />
 
-    <TheSearchMain v-else>
-      <TheSearch
-        :search-query="searchQuery"
-        @update-search-query="searchQuery = $event"
-      />
-    </TheSearchMain>
     <div
       :class="[
         'flex',
@@ -64,39 +58,44 @@
 </template>
 
 <script>
+import { computed } from "vue";
 import TheDropdownApps from "./TheDropdownApps.vue";
 import TheDropdownSettings from "./TheDropdownSettings.vue";
 import LogoMain from "./LogoMain.vue";
-import TheSearch from "./TheSearch.vue";
-import TheSearchMain from "./TheSearchMain.vue";
+import TheSearchWrapper from "./TheSearchWrapper.vue";
 import ButtonLogin from "./ButtonLogin.vue";
 import BaseIcon from "./BaseIcon.vue";
 import BaseTooltip from "./BaseTooltip.vue";
-import TheSearchMobile from "./TheSearchMobile.vue";
 export default {
   components: {
     TheDropdownApps,
     TheDropdownSettings,
     LogoMain,
-    TheSearch,
-    TheSearchMain,
-    TheSearchMobile,
+    TheSearchWrapper,
     ButtonLogin,
     BaseIcon,
     BaseTooltip,
+  },
+  provide() {
+    return {
+      isMobileSearchActive: computed(() => this.isMobileSearchActive),
+    };
   },
   emits: {
     toggleSidebar: null,
   },
   data() {
     return {
-      searchQuery: "",
       isSmallScreen: false,
       isMobileSearchActive: false,
       classes: ["flex", "justify-between", "bg-white", "bg-opacity-95"],
     };
   },
   computed: {
+    isSearchShown() {
+      return this.isMobileSearchShown || !this.isSmallScreen;
+    },
+
     isMobileSearchShown() {
       return this.isSmallScreen && this.isMobileSearchActive;
     },

@@ -4,20 +4,25 @@
       <TheSearchInput
         v-model:query="query"
         :has-results="results.length"
+        :is-mobile-search-active="isMobileSearchActive"
         @update:query="updateSearchResults"
         @change-state="toggleSearchResults"
         @keyup.up="handlePreviousSearchResult"
         @keyup.down="handleNextSearchResult"
+        @enter="selectSearchResult"
         @keydown.up.prevent
       />
       <TheSearchResults
         v-show="isSearchResultsShown"
         :results="results"
         :active-result-id="activeSearchResultId"
+        @search-result-mouseenter="activeSearchResultId = $event"
+        @search-result-mouseleave="activeSearchResultId = null"
+        @search-result-click="selectSearchResult"
       />
     </div>
 
-    <TheSearchButton />
+    <TheSearchButton @click.stop="selectSearchResult" />
   </div>
 </template>
 
@@ -31,13 +36,11 @@ export default {
     TheSearchButton,
     TheSearchResults,
   },
-  props: ["searchQuery"],
-  emits: ["update-search-query"],
   data() {
     return {
       results: [],
-      query: this.searchQuery,
-      activeQuery: this.searchQuery,
+      query: "",
+      activeQuery: "",
       activeSearchResultId: null,
       isSearchResultsShown: false,
       keywords: [
@@ -58,17 +61,21 @@ export default {
       ],
     };
   },
+  props: ["isMobileSearchActive"],
   computed: {
     trimmedQuery() {
       return this.query.replace(/\s+/g, " ").trim();
     },
   },
-  watch: {
-    query(query) {
-      this.$emit("update-search-query", query);
-    },
+  mounted() {
+    window.addEventListener("click", this.onClickAndResize);
+    window.addEventListener("resize", this.onClickAndResize);
   },
+
   methods: {
+    onClickAndResize() {
+      this.toggleSearchResults(false);
+    },
     updateSearchResults() {
       this.activeSearchResultId = null;
       this.activeQuery = this.query;
@@ -82,12 +89,14 @@ export default {
       }
     },
     toggleSearchResults(isSearchInputActive) {
-      this.isSearchResultsShown = isSearchInputActive && this.results.length;
+      this.isSearchResultsShown =
+        isSearchInputActive && this.results.length > 0;
     },
 
     handlePreviousSearchResult() {
       if (this.isSearchResultsShown) {
         this.makePreviousSearchResultActive();
+        this.updateQueryWithSearchResult();
       } else {
         this.toggleSearchResults(true);
       }
@@ -96,6 +105,7 @@ export default {
     handleNextSearchResult() {
       if (this.isSearchResultsShown) {
         this.makeNextSearchResultActive();
+        this.updateQueryWithSearchResult();
       } else {
         this.toggleSearchResults(true);
       }
@@ -109,8 +119,6 @@ export default {
       } else {
         this.activeSearchResultId--;
       }
-
-      this.updateQueryWithSearchResult();
     },
     makeNextSearchResultActive() {
       if (this.activeSearchResultId === null) {
@@ -120,8 +128,6 @@ export default {
       } else {
         this.activeSearchResultId++;
       }
-
-      this.updateQueryWithSearchResult();
     },
 
     updateQueryWithSearchResult() {
@@ -130,6 +136,15 @@ export default {
       this.query = hasActiveSearchResult
         ? this.results[this.activeSearchResultId]
         : this.activeQuery;
+    },
+    selectSearchResult() {
+      this.query = this.activeSearchResultId
+        ? this.results[this.activeSearchResultId]
+        : this.query;
+
+      this.toggleSearchResults(false);
+
+      this.updateSearchResults();
     },
   },
 };

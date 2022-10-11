@@ -8,9 +8,9 @@
       :value="query"
       @input="updateQuery($event.target.value)"
       @focus="setState(true)"
-      @blur="setState(false)"
-      @click="setState(true)"
+      @click.stop="setState(true)"
       @keyup.esc="handleEsc"
+      @keydown.enter="handleEnter"
     />
     <button
       class="absolute top-0 right-0 h-full px-3 focus:outline-none"
@@ -25,8 +25,9 @@
 import BaseIcon from "./BaseIcon.vue";
 export default {
   components: { BaseIcon },
+  inject: ["isMobileSearchActive"],
   props: ["query", "hasResults"],
-  emits: ["update:query", "change-state"],
+  emits: ["update:query", "change-state", "enter"],
   data() {
     return {
       isActive: false,
@@ -43,6 +44,13 @@ export default {
         "focus:outline-none",
       ],
     };
+  },
+  watch: {
+    "isMobileSearchActive.value"(isMobileSearchActive) {
+      if (isMobileSearchActive) {
+        this.$nextTick(() => this.$refs.input.focus());
+      }
+    },
   },
   mounted() {
     if (window.innerWidth < 640) {
@@ -86,7 +94,13 @@ export default {
         this.$refs.input.blur();
       }
     },
+    handleEnter() {
+      this.setState(false);
 
+      this.$refs.input.blur();
+
+      this.$emit("enter");
+    },
     removeSelection() {
       const end = this.$refs.input.value.length;
 
