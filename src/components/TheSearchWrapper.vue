@@ -5,25 +5,28 @@
         <BaseIcon name="arrowLeft" class="w-5 h-5" />
       </button>
     </BaseTooltip>
-    <TheSearch :is-mobile-search-active="isMobileSearchActive" />
+    <TheSearch />
     <BaseTooltip text="Search with your voice" :left="isSmallScreen">
       <button class="p-2 focus:outline-none">
         <BaseIcon name="microphone" class="w-5 h-5" />
       </button>
     </BaseTooltip>
+    <BaseModal />
   </div>
 </template>
 <script>
 import BaseIcon from "./BaseIcon.vue";
 import BaseTooltip from "./BaseTooltip.vue";
+import BaseModal from "./BaseModal.vue";
 import TheSearch from "./TheSearch.vue";
 export default {
   components: {
     BaseIcon,
     BaseTooltip,
+    BaseModal,
     TheSearch,
   },
-  props: ["isSmallScreen", "isMobileSearchActive"],
+  props: ["isSmallScreen"],
   emits: {
     close: null,
   },
@@ -49,9 +52,6 @@ export default {
   },
   mounted() {
     window.addEventListener("click", this.onClick);
-  },
-  beforeUnmount() {
-    window.removeEventListener("click", this.onClick);
   },
   methods: {
     onClick(event) {
