@@ -4,7 +4,6 @@
       <TheSearchInput
         v-model:query="query"
         :has-results="results.length"
-        :is-mobile-search-active="isMobileSearchActive"
         @update:query="updateSearchResults"
         @change-state="toggleSearchResults"
         @keyup.up="handlePreviousSearchResult"
@@ -61,7 +60,6 @@ export default {
       ],
     };
   },
-  props: ["isMobileSearchActive"],
   computed: {
     trimmedQuery() {
       return this.query.replace(/\s+/g, " ").trim();
@@ -138,9 +136,10 @@ export default {
         : this.activeQuery;
     },
     selectSearchResult() {
-      this.query = this.activeSearchResultId
-        ? this.results[this.activeSearchResultId]
-        : this.query;
+      this.query =
+        this.activeSearchResultId === null
+          ? this.query
+          : this.results[this.activeSearchResultId];
 
       this.toggleSearchResults(false);
 

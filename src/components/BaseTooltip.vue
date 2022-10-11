@@ -32,7 +32,11 @@ export default {
   data() {
     return {
       isShown: false,
-      classes: [
+    };
+  },
+  computed: {
+    classes() {
+      return [
         "bg-gray-600",
         "bg-opacity-80",
         "rounded-sm",
@@ -43,8 +47,8 @@ export default {
         "transform",
         "absolute",
         ...this.getPositionClasses(),
-      ],
-    };
+      ];
+    },
   },
   methods: {
     getPositionClasses() {
