@@ -7,11 +7,11 @@
     </BaseTooltip>
     <TheSearch />
     <BaseTooltip text="Search with your voice" :left="isSmallScreen">
-      <button class="p-2 focus:outline-none">
+      <button @click="isVoiceModalOpen = true" class="p-2 focus:outline-none">
         <BaseIcon name="microphone" class="w-5 h-5" />
       </button>
     </BaseTooltip>
-    <BaseModal />
+    <BaseModal v-if="isVoiceModalOpen" @close="isVoiceModalOpen = false" />
   </div>
 </template>
 <script>
@@ -26,10 +26,13 @@ export default {
     BaseModal,
     TheSearch,
   },
-  props: ["isSmallScreen"],
-  emits: {
-    close: null,
+  data() {
+    return {
+      isVoiceModalOpen: false,
+    };
   },
+  props: ["isSmallScreen"],
+  emits: ["close"],
   computed: {
     classes() {
       return this.isSmallScreen
