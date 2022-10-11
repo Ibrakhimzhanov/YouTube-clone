@@ -1,12 +1,13 @@
 <template>
   <BaseModal>
-    <p class="text-2xl mb-52">Microphone off. Try again.</p>
-    <button :class="classes">
-      <BaseIcon name="microphone" />
-    </button>
-    <div class="text-center text-sm text-gray-500 mt-4">
-      Tap the microphone to try again
+    <p class="text-2xl mb-52">{{ text }}</p>
+    <div class="flex justify-center items-center">
+      <span v-show="isListening" :class="buttonAnimationClasses" />
+      <button :class="buttonClassses" @click="isListening = !isListening">
+        <BaseIcon name="microphone" />
+      </button>
     </div>
+    <div :class="buttonHindClassses">Tap the microphone to try again</div>
   </BaseModal>
 </template>
 <script>
@@ -20,20 +21,51 @@ export default {
   },
   data() {
     return {
-      classes: [
+      isListening: false,
+    };
+  },
+  computed: {
+    buttonClassses() {
+      return [
+        this.isListening ? "bg-red-600" : "bg-gray-300",
+        this.isListening ? "text-white" : "text-black",
         "w-16",
         "h-16",
         "mx-auto",
-        "bg-gray-300",
         "rounded-full",
-        "text-black",
         "flex",
         "justify-center",
         "items-center",
         "relative",
         "focus:outline-none",
-      ],
-    };
+      ];
+    },
+
+    buttonHindClassses() {
+      return [
+        this.isListening ? "invisible" : "visible",
+        "text-center",
+        "text-sm",
+        "text-gray-500",
+        "mt-4",
+      ];
+    },
+
+    text() {
+      return this.isListening ? "Listening..." : "Microphone off. Try again.";
+    },
+
+    buttonAnimationClasses() {
+      return [
+        "animate-ping",
+        "absolute",
+        "w-14",
+        "h-14",
+        "rounded-full",
+        "border",
+        "border-gray-300",
+      ];
+    },
   },
 };
 </script>
