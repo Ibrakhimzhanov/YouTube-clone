@@ -22,12 +22,16 @@ export default {
   components: {
     BaseIcon,
   },
+
+  emits: ["change-text"],
+
   data() {
     return {
       status: STATUS_LISTENING,
       recordingTimeout: null,
     };
   },
+
   computed: {
     buttonClassses() {
       const bgColorClass = this.isStatus(STATUS_LISTENING, STATUS_RECORDING)
@@ -78,25 +82,32 @@ export default {
       ];
     },
   },
+
   watch: {
-    status() {
-      let text = "Microphone off. Try again.";
+    status: {
+      handler() {
+        let text = "Microphone off. Try again.";
 
-      if (this.isStatus(STATUS_QUIET)) {
-        text = "Didn't hear that. Try again.";
-      } else if (this.isStatus(STATUS_LISTENING, STATUS_RECORDING)) {
-        text = "Listening...";
-      }
+        if (this.isStatus(STATUS_QUIET)) {
+          text = "Didn't hear that. Try again.";
+        } else if (this.isStatus(STATUS_LISTENING, STATUS_RECORDING)) {
+          text = "Listening...";
+        }
 
-      this.$emit("change-text", text);
+        this.$emit("change-text", text);
+      },
+      immediate: true,
     },
   },
+
   mounted() {
     this.handleRecordingTimeout();
   },
+
   beforeUnmount() {
     clearTimeout(this.recordingTimeout);
   },
+
   methods: {
     toggleRecording() {
       clearTimeout(this.recordingTimeout);
@@ -105,6 +116,7 @@ export default {
 
       this.handleRecordingTimeout();
     },
+
     updateStatus(status) {
       if (status) {
         this.status = status;
@@ -116,6 +128,7 @@ export default {
         this.status = STATUS_LISTENING;
       }
     },
+
     handleRecordingTimeout() {
       if (this.isStatus(STATUS_LISTENING, STATUS_RECORDING)) {
         this.recordingTimeout = setTimeout(() => {
