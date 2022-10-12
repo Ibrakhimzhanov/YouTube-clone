@@ -5,51 +5,60 @@
       :search-predictions="searchPredictions"
       v-model="selectedSearchPredictions"
     />
+    <p class="text-xs text-gray-600 mt-5">The selected predictions are:</p>
+    <div class="space-y-3 text-black text-sm mt-5">
+      <div
+        v-for="(label, index) in searchPredictionCategories"
+        :key="label"
+        class="flex items-center"
+      >
+        <input
+          type="radio"
+          class="h-5 w-5 cursor-pointer"
+          :id="`search-prediction-category-${index}`"
+          :value="label"
+          v-model="selectedSearchPredictionCategory"
+        />
+        <label
+          for="`search-prediction-category-${index}`"
+          class="pl-4 cursor-pointer flex-grow"
+          >{{ label }}</label
+        >
+      </div>
+    </div>
+
     <template #footer="{ close }">
-      <button @click="close" :class="classes">Cancel</button>
-      <button :class="ReportClasses" disabled>Report</button>
+      <BaseButton @click="close" class="ml-auto"> Cancel </BaseButton>
+      <BaseButton class="ml-1 text-gray-400 cursor-auto" disabled>
+        Report
+      </BaseButton>
     </template>
   </BaseModal>
 </template>
 
 <script>
 import BaseModal from "./BaseModal.vue";
+import BaseButton from "./BaseButton.vue";
 import TheSearchPredictionsList from "./TheSearchPredictionsList.vue";
 export default {
   components: {
     BaseModal,
+    BaseButton,
     TheSearchPredictionsList,
   },
   props: {
     searchPredictions: Array,
   },
-
   data() {
     return {
       selectedSearchPredictions: [],
-      classes: [
-        "uppercase",
-        "text-sm",
-        "font-medium",
-        "tracking-wider",
-        "py-2.5",
-        "px-4",
-        "ml-auto",
-        "mr-1",
-        "focus:outline-none",
-      ],
-      ReportClasses: [
-        "uppercase",
-        "text-sm",
-        "font-medium",
-        "tracking-wider",
-        "py-2.5",
-        "px-4",
-        "ml-1",
-        "mr-1",
-        "focus:outline-none",
-        "text-gray-400",
-        "cursor-auto",
+      selectedSearchPredictionCategory: null,
+      searchPredictionCategories: [
+        "Hateful",
+        "Sexually Explicit",
+        "Violent",
+        "Dangerous and harmful activity",
+        "Other",
       ],
     };
   },
