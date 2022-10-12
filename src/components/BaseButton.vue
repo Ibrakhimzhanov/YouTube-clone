@@ -8,7 +8,6 @@
 export default {
   data() {
     return {
-      selectedSearchPredictions: [],
       classes: [
         "uppercase",
         "text-sm",

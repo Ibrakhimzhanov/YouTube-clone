@@ -63,12 +63,12 @@ export default {
   components: {
     TheDropdownApps,
     TheDropdownSettings,
+    TheModalSearchWithVoice,
     LogoMain,
     TheSearchWrapper,
     ButtonLogin,
     BaseIcon,
     BaseTooltip,
-    TheModalSearchWithVoice,
   },
   provide() {
     return {
